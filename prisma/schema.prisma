@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,77 +8,67 @@ datasource db {
 }
 
 model User {
-  id   String @id @default(cuid()) @db.VarChar(255)
-  dni     Int      @unique
-  email   String   @unique
-  password String  @db.VarChar(255)
-  fistName    String? @db.VarChar(255)
-  lastName    String? @db.VarChar(255)
-  board   Board[]
-  goal    Goal[]
+  id        String   @id @default(cuid()) @db.VarChar(255)
+  dni       Int      @unique
+  email     String   @unique
+  password  String   @db.VarChar(255)
+  fistName  String?  @db.VarChar(255)
+  lastName  String?  @db.VarChar(255)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  active    Boolean  @default(true)
+  board     Board[]
+  goal      Goal[]
 }
 
 model TermDeposit {
-  id String @id @default(cuid()) @db.VarChar(255)
-  name String
-  bank    Bank     @relation(fields: [bankId], references: [id])
+  id     String @id @default(cuid()) @db.VarChar(255)
+  name   String
   bankId String
+  bank   Bank   @relation(fields: [bankId], references: [id])
 }
 
 model Goal {
-  id   String @id @default(cuid()) @db.VarChar(255)
-  name String? @db.VarChar(255)
+  id         String   @id @default(cuid()) @db.VarChar(255)
+  name       String?  @db.VarChar(255)
   goalAmount Decimal
-  goalDate DateTime
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user    User     @relation(fields: [userId], references: [id])
-  userId String @db.VarChar(255)
+  goalDate   DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  userId     String   @db.VarChar(255)
+  user       User     @relation(fields: [userId], references: [id])
 }
 
 model Bank {
-  id String @id @default(cuid()) @db.VarChar(255)
-  name String @db.VarChar(255)
-  ruc Int
-  website String @db.VarChar(255)
-  termDeposit TermDeposit[]
+  id                        String                      @id @default(cuid()) @db.VarChar(255)
+  name                      String                      @db.VarChar(255)
+  ruc                       Int
+  website                   String                      @db.VarChar(255)
   accountTermDepositOnBanks AccountTermDepositOnBanks[]
+  termDeposit               TermDeposit[]
 }
 
 model Board {
-  id   String @id @default(cuid()) @db.VarChar(255)
-  name String? @db.VarChar(255)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user    User     @relation(fields: [userId], references: [id])
-  userId String @db.VarChar(255)
+  id                        String                      @id @default(cuid()) @db.VarChar(255)
+  name                      String?                     @db.VarChar(255)
+  createdAt                 DateTime                    @default(now())
+  updatedAt                 DateTime                    @updatedAt
+  userId                    String                      @db.VarChar(255)
+  user                      User                        @relation(fields: [userId], references: [id])
   accountTermDepositOnBanks AccountTermDepositOnBanks[]
 }
 
 model AccountTermDepositOnBanks {
-  id String @id @default(cuid()) @db.VarChar(255)
-  board       Board     @relation(fields: [boardId], references: [id])
-  bank        Bank      @relation(fields: [bankId], references: [id])
-  bankId      String
-  boardId     String 
-  capital     Decimal @db.Decimal(15,7)
-  tea         Decimal @db.Decimal(10,7)
-  teaMin      Decimal @db.Decimal(10,7)
-  finalDate   DateTime
-  startDate   DateTime
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  //transaction Transaction[]
-
-  //@@id([boardId, bankId])
+  id        String   @id @default(cuid()) @db.VarChar(255)
+  bankId    String
+  boardId   String
+  capital   Decimal  @db.Decimal(15, 7)
+  tea       Decimal  @db.Decimal(10, 7)
+  teaMin    Decimal  @db.Decimal(10, 7)
+  finalDate DateTime
+  startDate DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  bank      Bank     @relation(fields: [bankId], references: [id])
+  board     Board    @relation(fields: [boardId], references: [id])
 }
-
-//model Transaction {
-//  id String @id @default(cuid()) @db.VarChar(255)
-//  type String
-//  date DateTime
-//  atd    AccountTermDepositOnBanks     @relation(fields: [atdId], references: [id])
-//  atdId String 
-//}
