@@ -22,15 +22,20 @@ export const getOneGoal = async (goalId: string): Promise<Goal> => {
   return data
 }
 
-export const createNewGoal = async (newGoal: Prisma.GoalCreateInput): Promise<Goal> => {
+export const createNewGoal = async (newGoal: Prisma.GoalCreateInput, userId: string): Promise<Goal> => {
   const data = await prisma.goal.create({
-    data: newGoal
+    data: {
+      ...newGoal,
+      user: {
+        connect: {id: userId}
+      }
+    }
   })
 
   return data
 }
 
-export const updateGoal = async (updatedGoal: Prisma.GoalUpdateInput, goalId: string): Promise<Goal> => {
+export const updateGoalById = async (updatedGoal: Prisma.GoalUpdateInput, goalId: string): Promise<Goal> => {
   const data = await prisma.goal.update({
     data: updatedGoal,
     where: {
@@ -41,7 +46,7 @@ export const updateGoal = async (updatedGoal: Prisma.GoalUpdateInput, goalId: st
   return data
 }
 
-export const deleteGoal = async (goalId: string): Promise<Goal> => {
+export const deleteGoalById = async (goalId: string): Promise<Goal> => {
   const data = await prisma.goal.delete({
     where: {
       id: goalId
