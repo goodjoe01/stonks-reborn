@@ -1,17 +1,69 @@
 import { Prisma, User } from "@prisma/client";
+import  bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 import  prisma  from "../lib/prisma"
+
+const TOKEN_KEY = process.env.TOKEN_KEY;
+
+const createToken = async (user: Prisma.UserCreateInput) =>{
+  const {email, id, fistName} = user;
+  
+  const token = jwt.sign(
+    { user_id:id, email, fistName},
+    TOKEN_KEY as string,
+    { expiresIn: "1h" }
+    );
+    return token;
+}
+
+export const login = async (email: string, password: string) =>{
+  try {
+    const user = await prisma.user.findUniqueOrThrow({where: {email: email}});
+
+    if(user && (await bcrypt.compare(password, user.password ))){
+      const newToken = await createToken(user);
+      user.token = newToken;
+      
+      const signUp = await prisma.user.update({
+        data: user , 
+        where:{
+        id: user.id
+        },
+        select:{
+          fistName: true,
+          email: true,
+          token: true,
+        }
+      });
+      return signUp;
+    }
+    else{
+      return console.log('Incorrect credentials');
+    }
+
+  } catch (error) {
+    if(error instanceof Error){
+      return console.log('Error in service' + error.message);
+    }
+  }
+}
 
 export const createUser = async (user: Prisma.UserCreateInput) =>{
   try {
+
+    const jsonWT = await createToken(user);
+    const encryptedPassword = await bcrypt.hash(user.password,10);
+
     const newUser = await prisma.user.create({
-      data: {
-        dni: user.dni,      
-        email: user.email,   
-        password: user.password,
-        fistName: user.fistName,    
-        lastName: user.lastName
-      }
-  });
+        data: {
+          dni: user.dni,      
+          email: user.email,   
+          password: encryptedPassword,
+          fistName: user.fistName,    
+          lastName: user.lastName,
+          token: jsonWT
+        }
+      });
 
   return newUser;
   
@@ -31,6 +83,8 @@ export const getAllUsers = async () =>{
         lastName: true,
         dni: true,
         email: true,
+        active: true,
+        token: true
       }
     });
     return users;
@@ -75,7 +129,7 @@ export const updateUser = async (userId: string, user: Prisma.UserCreateInput) =
         fistName:true,
         lastName: true,
         dni: true,
-        email: true,
+        email: true
       }
     });
 
@@ -87,3 +141,4 @@ export const updateUser = async (userId: string, user: Prisma.UserCreateInput) =
     }
   }
 }
+

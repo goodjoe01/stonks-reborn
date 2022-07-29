@@ -1,6 +1,19 @@
 import { Prisma } from '@prisma/client';
-import { createUser, getAllUsers, getOneUser, updateUser} from '../services/user'
+import { createUser, getAllUsers, getOneUser, updateUser, login } from '../services/user'
 import { Request, Response } from 'express';
+
+export const signUp = async (req: Request, res: Response)=>{
+  try {
+    const {email, password } = req.body;
+    const loggedUser = await login(email, password);
+    res.status(200).json(loggedUser);
+
+  } catch (error) {
+    if(error instanceof Error){
+      return res.status(500).json({error: error.message});
+    }
+  }
+}
 
 export const postUser = async (req: Request, res: Response)=>{
   try {
