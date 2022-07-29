@@ -1,16 +1,21 @@
 import  express  from 'express'
 import morgan from 'morgan';
 import cors from 'cors';
-import goalRouter from './routes/goal.route';
+
+import goalRouter from './routes/goal.route'
+import userRouter from './routes/user'
 
 const app = express();
-
+/*app.use('/',(req:Request, res:Response)=>{
+  res.json('hello');
+});*/
 app.use(morgan('dev'));
 app.use(cors());
 app.use(express.json());
 
-// Routes
 
+// Routes
+app.use(userRouter);
 app.use('/api/v1/goals', goalRouter)
 
 export default app;
