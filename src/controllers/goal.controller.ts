@@ -1,5 +1,5 @@
 import { Prisma, User } from "@prisma/client";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { createNewGoal,
    deleteGoalById,
    getAllGoals,
@@ -7,10 +7,10 @@ import { createNewGoal,
    updateGoalById
   } from "../services/goal.service";
 
-export const getGoals = async (req : Request, res: Response)  => {
+export const getGoals = async (req : Request, res: Response, next: NextFunction)  => {
   const userId = ''
   const goals = await getAllGoals(userId)
-
+    
   res.status(200).send(goals)
 }
 

@@ -4,6 +4,7 @@ import cors from 'cors';
 
 import goalRouter from './routes/goal.route'
 import userRouter from './routes/user'
+import { ErrorHandler } from './middleware/error-handler';
 
 const app = express();
 /*app.use('/',(req:Request, res:Response)=>{
@@ -17,5 +18,7 @@ app.use(express.json());
 // Routes
 app.use(userRouter);
 app.use('/api/v1/goals', goalRouter)
+
+app.use(ErrorHandler)
 
 export default app;
