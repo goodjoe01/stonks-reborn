@@ -1,11 +1,10 @@
-import { Goal, Prisma } from "@prisma/client";
-import prisma from "../lib/prisma";
+import { Goal, Prisma } from '@prisma/client'
+import prisma from '../lib/prisma'
 
 export const getAllGoals = async (userId: string): Promise<Array<Goal>> => {
-  
   const data = await prisma.goal.findMany({
     where: {
-      userId: userId
+      userId
     }
   })
 
@@ -13,7 +12,7 @@ export const getAllGoals = async (userId: string): Promise<Array<Goal>> => {
 }
 
 export const getOneGoal = async (goalId: string): Promise<Goal> => {
-  const data = await prisma.goal.findUniqueOrThrow( {
+  const data = await prisma.goal.findUniqueOrThrow({
     where: {
       id: goalId
     }
@@ -27,7 +26,7 @@ export const createNewGoal = async (newGoal: Prisma.GoalCreateInput, userId: str
     data: {
       ...newGoal,
       user: {
-        connect: {id: userId}
+        connect: { id: userId }
       }
     }
   })
