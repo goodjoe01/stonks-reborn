@@ -25,12 +25,15 @@ export const login = async (email: string, password: string) =>{
       user.token = newToken;
       
       const signUp = await prisma.user.update({
-        data: user , 
+        data: {
+          token: user.token
+        } , 
         where:{
         id: user.id
         },
         select:{
           firstName: true,
+          lastName: true,
           email: true,
           token: true,
         }
@@ -120,6 +123,8 @@ export const getOneUser = async (userId: string) =>{
 
 export const updateUser = async (userId: string, user: Prisma.UserCreateInput) =>{
   try {
+    const encryptedPassword = await bcrypt.hash(user.password,10);
+    user.password = encryptedPassword;
     const userUpdated = await prisma.user.update({
       data: user,
       where:{
