@@ -10,6 +10,14 @@ export class HttpError extends Error {
   }
 }
 
-export default {
-  HttpError
+export class AuthorizationHttpError extends HttpError {
+  constructor () {
+    super('You don\'t have authorization to access this resource', 403)
+  }
+}
+
+export class NotFoundHttpError extends HttpError {
+  constructor () {
+    super('Resource not found :c', 404)
+  }
 }

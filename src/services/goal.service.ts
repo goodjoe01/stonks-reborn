@@ -54,3 +54,16 @@ export const deleteGoalById = async (goalId: string): Promise<Goal> => {
 
   return data
 }
+
+export const haveAuthorizationOnGoal = async (goalId:string, userId: string): Promise<boolean> => {
+  const dbUserId = await prisma.goal.findUniqueOrThrow({
+    where: {
+      id: goalId
+    },
+    select: {
+      userId: true
+    }
+  })
+  if (userId !== dbUserId.userId) return false
+  return true
+}

@@ -9,7 +9,7 @@ const createToken = async (user: Prisma.UserCreateInput) => {
   const { email, id, firstName } = user
 
   const token = jwt.sign(
-    { user_id: id, email, firstName },
+    { userId: id, email, firstName },
     TOKEN_KEY as string,
     { expiresIn: '1h' }
   )
