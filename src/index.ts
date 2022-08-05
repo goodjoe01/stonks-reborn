@@ -1,25 +1,20 @@
 import * as dotenv from 'dotenv'
+import app from './app'
+import prisma from './lib/prisma'
 dotenv.config()
-import app from "./app";
-import prisma from "./lib/prisma";
-import { Request, Response } from 'express';
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000
 
-async function main (){
+async function main () {
   try {
-    await prisma.$connect();
-    console.log('Database connection is working');
-/*     app.use('/',(req:Request, res:Response)=>{
-      res.json('bebito fiu fiu');
-    }); */
-    app.listen(PORT,()=>{
-      console.log(`Server is ready on port ${PORT}`); 
-    });
+    await prisma.$connect()
+    console.log('Database connection is working')
+    app.listen(PORT, () => {
+      console.log(`Server is ready on port ${PORT}`)
+    })
   } catch (error) {
-    if(error instanceof Error)
-    console.error(error.message);
+    if (error instanceof Error) { console.error(error.message) }
   }
 }
 
-main();
+main()
