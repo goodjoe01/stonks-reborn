@@ -6,6 +6,7 @@ import goalRouter from './routes/goal.route'
 import userRouter from './routes/user.route'
 import { ErrorHandler } from './middleware/error-handler'
 import boardRouter from './routes/board.route'
+import depositRouter from './routes/deposit.route'
 
 const app = express()
 
@@ -15,8 +16,9 @@ app.use(express.json())
 
 // Routes
 app.use(userRouter)
-app.use('/api/v1/goal', goalRouter)
-app.use('/api/v1/board', boardRouter)
+app.use('/api/v1/goals', goalRouter)
+app.use('/api/v1/boards', boardRouter)
+app.use('/api/v1/deposits', depositRouter)
 
 app.use(ErrorHandler)
 

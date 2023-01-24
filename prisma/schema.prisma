@@ -45,7 +45,7 @@ model Bank {
   name                      String                      @db.VarChar(255)
   ruc                       Int
   website                   String                      @db.VarChar(255)
-  accountTermDepositOnBanks AccountTermDepositOnBanks[]
+  accountTermDepositOnBanks Deposit[]
   termDeposit               TermDeposit[]
 }
 
@@ -56,10 +56,10 @@ model Board {
   updatedAt                 DateTime                    @updatedAt
   userId                    String                      @db.VarChar(255)
   user                      User                        @relation(fields: [userId], references: [id])
-  accountTermDepositOnBanks AccountTermDepositOnBanks[]
+  accountTermDepositOnBanks Deposit[]
 }
 
-model AccountTermDepositOnBanks {
+model Deposit {
   id        String   @id @default(cuid()) @db.VarChar(255)
   bankId    String
   boardId   String
