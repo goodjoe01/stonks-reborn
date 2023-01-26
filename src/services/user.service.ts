@@ -48,7 +48,6 @@ export const login = async (email: string, password: string) => {
 
 export const createUser = async (user: Prisma.UserCreateInput) => {
   try {
-    const jsonWT = await createToken(user)
     const encryptedPassword = await bcrypt.hash(user.password, 10)
 
     const newUser = await prisma.user.create({
@@ -58,9 +57,11 @@ export const createUser = async (user: Prisma.UserCreateInput) => {
         password: encryptedPassword,
         firstName: user.firstName,
         lastName: user.lastName,
-        token: jsonWT
       }
     })
+
+    const jsonWT = await createToken(newUser)
+    newUser.token = jsonWT
 
     return newUser
   } catch (error) {
